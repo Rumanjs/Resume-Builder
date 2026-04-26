@@ -52,11 +52,10 @@ def score_resume(payload: RenderRequest) -> dict:
 def download_pdf(payload: RenderRequest) -> Response:
     if not payload.resume.personal.full_name.strip():
         raise HTTPException(status_code=422, detail="Full name is required.")
-    pdf = generate_pdf(payload.resume)
+    pdf = generate_pdf(payload.resume, get_template(payload.template_id))
     filename = payload.resume.personal.full_name.lower().replace(" ", "-") or "resume"
     return Response(
         content=pdf,
         media_type="application/pdf",
         headers={"Content-Disposition": f'attachment; filename="{filename}-resume.pdf"'},
     )
-

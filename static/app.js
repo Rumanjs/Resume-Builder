@@ -1,4 +1,5 @@
 const state = {
+  profileImage: "",
   experience: [
     {
       company: "Northstar Labs",
@@ -39,6 +40,15 @@ const state = {
 
 const $ = (selector) => document.querySelector(selector);
 
+function escapeHtml(value) {
+  return String(value || "")
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
+
 function splitLines(value) {
   return value
     .split("\n")
@@ -57,23 +67,31 @@ function field(id) {
   return document.getElementById(id).value.trim();
 }
 
+function input(fieldName, placeholder, value = "") {
+  return `<input data-field="${fieldName}" placeholder="${placeholder}" value="${escapeHtml(value)}">`;
+}
+
+function textarea(fieldName, rows, placeholder, value = "") {
+  return `<textarea data-field="${fieldName}" rows="${rows}" placeholder="${placeholder}">${escapeHtml(value)}</textarea>`;
+}
+
 function cardTemplate(type, item, index) {
   const commonDates = `
     <div class="grid two">
-      <input data-field="start" placeholder="Start" value="${item.start || ""}">
-      <input data-field="end" placeholder="End" value="${item.end || ""}">
+      ${input("start", "Start", item.start)}
+      ${input("end", "End", item.end)}
     </div>`;
 
   if (type === "experience") {
     return `
       <div class="item-card" data-type="${type}" data-index="${index}">
         <div class="grid two">
-          <input data-field="role" placeholder="Role" value="${item.role || ""}">
-          <input data-field="company" placeholder="Company" value="${item.company || ""}">
+          ${input("role", "Role", item.role)}
+          ${input("company", "Company", item.company)}
         </div>
-        <input data-field="location" placeholder="Location" value="${item.location || ""}">
+        ${input("location", "Location", item.location)}
         ${commonDates}
-        <textarea data-field="bullets" rows="4" placeholder="One bullet per line">${item.bullets || ""}</textarea>
+        ${textarea("bullets", 4, "One measurable result per line", item.bullets)}
         <button class="danger-btn" type="button" data-remove>Remove</button>
       </div>`;
   }
@@ -82,11 +100,11 @@ function cardTemplate(type, item, index) {
     return `
       <div class="item-card" data-type="${type}" data-index="${index}">
         <div class="grid two">
-          <input data-field="name" placeholder="Project name" value="${item.name || ""}">
-          <input data-field="link" placeholder="Link" value="${item.link || ""}">
+          ${input("name", "Project name", item.name)}
+          ${input("link", "Link", item.link)}
         </div>
-        <textarea data-field="description" rows="2" placeholder="Description">${item.description || ""}</textarea>
-        <textarea data-field="bullets" rows="3" placeholder="One bullet per line">${item.bullets || ""}</textarea>
+        ${textarea("description", 2, "Short project summary", item.description)}
+        ${textarea("bullets", 3, "One highlight per line", item.bullets)}
         <button class="danger-btn" type="button" data-remove>Remove</button>
       </div>`;
   }
@@ -95,22 +113,22 @@ function cardTemplate(type, item, index) {
     return `
       <div class="item-card" data-type="${type}" data-index="${index}">
         <div class="grid two">
-          <input data-field="degree" placeholder="Degree" value="${item.degree || ""}">
-          <input data-field="school" placeholder="School" value="${item.school || ""}">
+          ${input("degree", "Degree", item.degree)}
+          ${input("school", "School", item.school)}
         </div>
-        <input data-field="location" placeholder="Location" value="${item.location || ""}">
+        ${input("location", "Location", item.location)}
         ${commonDates}
-        <textarea data-field="details" rows="3" placeholder="One detail per line">${item.details || ""}</textarea>
+        ${textarea("details", 3, "One detail per line", item.details)}
         <button class="danger-btn" type="button" data-remove>Remove</button>
       </div>`;
   }
 
   return `
     <div class="item-card" data-type="${type}" data-index="${index}">
-      <input data-field="name" placeholder="Certification" value="${item.name || ""}">
+      ${input("name", "Certification", item.name)}
       <div class="grid two">
-        <input data-field="issuer" placeholder="Issuer" value="${item.issuer || ""}">
-        <input data-field="date" placeholder="Date" value="${item.date || ""}">
+        ${input("issuer", "Issuer", item.issuer)}
+        ${input("date", "Date", item.date)}
       </div>
       <button class="danger-btn" type="button" data-remove>Remove</button>
     </div>`;
@@ -123,18 +141,25 @@ function renderCards() {
   $("#certificationList").innerHTML = state.certifications.map((item, index) => cardTemplate("certification", item, index)).join("");
 }
 
+function collectionName(type) {
+  return type === "project" ? "projects" : `${type}s`;
+}
+
 function syncCard(event) {
   const card = event.target.closest(".item-card");
   if (!card) return;
-  const collection = card.dataset.type === "project" ? "projects" : `${card.dataset.type}s`;
-  const item = state[collection][Number(card.dataset.index)];
-  if (event.target.matches("[data-field]")) {
-    item[event.target.dataset.field] = event.target.value;
-    schedulePreview();
-  }
+  const collection = collectionName(card.dataset.type);
+  const index = Number(card.dataset.index);
+
   if (event.target.matches("[data-remove]")) {
-    state[collection].splice(Number(card.dataset.index), 1);
+    state[collection].splice(index, 1);
     renderCards();
+    schedulePreview();
+    return;
+  }
+
+  if (event.target.matches("[data-field]")) {
+    state[collection][index][event.target.dataset.field] = event.target.value;
     schedulePreview();
   }
 }
@@ -146,8 +171,7 @@ function addItem(type) {
     education: { school: "", degree: "", location: "", start: "", end: "", details: "" },
     certification: { name: "", issuer: "", date: "" }
   };
-  const collection = type === "project" ? "projects" : `${type}s`;
-  state[collection].push(empty[type]);
+  state[collectionName(type)].push(empty[type]);
   renderCards();
   schedulePreview();
 }
@@ -163,7 +187,8 @@ function payload() {
         phone: field("phone"),
         location: field("location"),
         linkedin: field("linkedin"),
-        portfolio: "",
+        portfolio: field("portfolio"),
+        profile_image: state.profileImage,
         summary: field("summary")
       },
       target_role: field("targetRole"),
@@ -180,7 +205,7 @@ function payload() {
 let previewTimer;
 function schedulePreview() {
   clearTimeout(previewTimer);
-  previewTimer = setTimeout(updatePreview, 180);
+  previewTimer = setTimeout(updatePreview, 160);
 }
 
 async function updatePreview() {
@@ -214,9 +239,26 @@ async function downloadPdf() {
   const url = URL.createObjectURL(blob);
   const anchor = document.createElement("a");
   anchor.href = url;
-  anchor.download = "resume.pdf";
+  anchor.download = `${field("fullName") || "resume"}.pdf`;
   anchor.click();
   URL.revokeObjectURL(url);
+}
+
+function handleImageUpload(event) {
+  const file = event.target.files?.[0];
+  if (!file) return;
+  if (file.size > 700000) {
+    alert("Please choose an image under 700 KB for fast preview and PDF requests.");
+    event.target.value = "";
+    return;
+  }
+  const reader = new FileReader();
+  reader.onload = () => {
+    state.profileImage = String(reader.result || "");
+    $("#profileImageName").textContent = file.name;
+    schedulePreview();
+  };
+  reader.readAsDataURL(file);
 }
 
 document.addEventListener("input", (event) => {
@@ -234,7 +276,7 @@ document.addEventListener("click", (event) => {
 
 $("#templateSelect").addEventListener("change", schedulePreview);
 $("#downloadBtn").addEventListener("click", downloadPdf);
+$("#profileImage").addEventListener("change", handleImageUpload);
 
 renderCards();
 updatePreview();
-

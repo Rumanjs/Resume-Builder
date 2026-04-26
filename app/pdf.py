@@ -5,6 +5,7 @@ import textwrap
 from typing import Iterable, List
 
 from app.models import ResumeData
+from app.template_catalog import ResumeTemplate
 
 
 PAGE_WIDTH = 612
@@ -121,7 +122,7 @@ def _section(title: str) -> List[tuple[str, str]]:
     return [("space", ""), ("heading", title)]
 
 
-def generate_pdf(resume: ResumeData) -> bytes:
+def generate_pdf(resume: ResumeData, template: ResumeTemplate | None = None) -> bytes:
     pages: List[List[str]] = [[]]
     y = TOP
 
@@ -186,4 +187,3 @@ def _build_pdf(pages: Iterable[List[str]]) -> bytes:
         f"trailer\n<< /Size {len(objects) + 1} /Root 1 0 R >>\nstartxref\n{xref_at}\n%%EOF\n".encode()
     )
     return buffer.getvalue()
-

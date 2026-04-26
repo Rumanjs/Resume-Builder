@@ -13,6 +13,7 @@ class PersonalDetails(BaseModel):
     location: Optional[str] = Field(default="", max_length=120)
     linkedin: Optional[str] = Field(default="", max_length=200)
     portfolio: Optional[str] = Field(default="", max_length=200)
+    profile_image: Optional[str] = Field(default="", max_length=1_200_000)
     summary: Optional[str] = Field(default="", max_length=900)
 
 

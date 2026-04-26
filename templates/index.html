@@ -22,7 +22,7 @@
             Template
             <select id="templateSelect">
               {% for template in templates %}
-              <option value="{{ template.id }}">{{ template.name }}</option>
+              <option value="{{ template.id }}" data-layout="{{ template.layout }}">{{ template.name }} - {{ template.layout }}</option>
               {% endfor %}
             </select>
           </label>
@@ -46,7 +46,13 @@
               <input id="phone" required placeholder="Phone" value="+1 555 010 2288">
               <input id="location" placeholder="Location" value="Austin, TX">
               <input id="linkedin" placeholder="LinkedIn" value="linkedin.com/in/alexmorgan">
+              <input id="portfolio" placeholder="Portfolio" value="alexmorgan.dev">
             </div>
+            <label class="upload-box">
+              Profile image
+              <input id="profileImage" type="file" accept="image/*">
+              <span id="profileImageName">Optional for creative templates</span>
+            </label>
             <textarea id="summary" rows="4" placeholder="Professional summary">Full stack developer with 5+ years of experience building reliable web applications, REST APIs, and accessible user interfaces for SaaS teams.</textarea>
           </section>
 
@@ -93,4 +99,3 @@
     <script src="/static/app.js"></script>
   </body>
 </html>
-
