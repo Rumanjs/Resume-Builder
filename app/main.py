@@ -48,6 +48,11 @@ def score_resume(payload: RenderRequest) -> dict:
     return ats_report(payload.resume)
 
 
+@app.post("/api/keywords")
+def extract_resume_keywords(payload: RenderRequest) -> dict:
+    return {"keywords": ats_report(payload.resume)["extracted_keywords"]}
+
+
 @app.post("/api/pdf")
 def download_pdf(payload: RenderRequest) -> Response:
     if not payload.resume.personal.full_name.strip():

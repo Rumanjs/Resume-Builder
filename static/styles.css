@@ -113,6 +113,36 @@ p {
   padding-right: 4px;
 }
 
+.section-order {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.section-order button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid #d7e0ec;
+  border-radius: 6px;
+  padding: 9px;
+  color: #1f2937;
+  background: #ffffff;
+  cursor: pointer;
+  font-weight: 800;
+}
+
+.section-order span {
+  display: inline-grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 999px;
+  color: #ffffff;
+  background: #334155;
+  font-size: 11px;
+}
+
 .template-card {
   display: grid;
   grid-template-columns: 54px 1fr;
@@ -364,6 +394,27 @@ textarea {
   color: #1e3a8a;
 }
 
+.secondary-btn.compact {
+  margin-top: 0;
+  padding: 9px 10px;
+  font-size: 12px;
+  text-align: center;
+}
+
+.action-row {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.import-btn {
+  cursor: pointer;
+}
+
+.import-btn input {
+  display: none;
+}
+
 .danger-btn {
   justify-self: start;
   background: #fee2e2;
@@ -391,9 +442,69 @@ textarea {
   font-size: 14px;
 }
 
+.zoom-control {
+  display: flex;
+  align-items: center;
+  grid-template-columns: none;
+  min-width: 150px;
+  color: #d8e2ef;
+  font-size: 12px;
+}
+
+.zoom-control input {
+  padding: 0;
+}
+
+.keyword-panel {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 14px;
+  align-items: center;
+  width: min(100%, 940px);
+  margin: 0 auto 18px;
+  padding: 12px 14px;
+  border: 1px solid #dbe4ef;
+  border-radius: 8px;
+  background: #ffffff;
+}
+
+.keyword-panel:empty {
+  display: none;
+}
+
+.keyword-panel strong {
+  display: block;
+  margin-bottom: 3px;
+}
+
+.keyword-panel p {
+  margin: 0;
+  color: #526070;
+  font-size: 13px;
+}
+
+.keyword-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  justify-content: flex-end;
+}
+
+.keyword-chips button {
+  border: 1px solid #cbd5e1;
+  border-radius: 999px;
+  padding: 5px 8px;
+  color: #1e3a8a;
+  background: #eff6ff;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 800;
+}
+
 .preview-frame {
   width: min(100%, 940px);
   margin: 0 auto;
+  transition: transform 160ms ease;
 }
 
 .resume {
@@ -948,5 +1059,16 @@ textarea {
     align-items: flex-start;
     flex-direction: column;
     gap: 3px;
+  }
+
+  .action-row,
+  .template-grid,
+  .section-order,
+  .keyword-panel {
+    grid-template-columns: 1fr;
+  }
+
+  .keyword-chips {
+    justify-content: flex-start;
   }
 }

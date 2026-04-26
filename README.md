@@ -18,7 +18,10 @@ http://127.0.0.1:8000
 
 - Collects personal details, education, skills, experience, projects, and certifications.
 - Provides 120 ATS-safe template variants.
+- Ensures all 120 templates have unique structural signatures across layouts, headers, image placement, section styling, skill styling, and project presentation.
 - Renders a real-time browser preview.
+- Includes template search/filtering, preview zoom, section ordering, autosave, and JSON import/export.
+- Extracts keywords from pasted job descriptions and highlights ATS keyword gaps.
+- Supports profile image uploads for image-ready templates.
 - Generates a downloadable PDF using clean, parser-friendly text layout.
 - Keeps templates data-driven so more styles or AI suggestions can be added later.
-

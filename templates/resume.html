@@ -115,6 +115,24 @@
 {% endif %}
 {%- endmacro %}
 
+{% macro ordered_sections(resume, template, include_sidebar_sections=False) -%}
+{% for section in resume.section_order %}
+  {% if section == "summary" %}
+    {{ summary_block(resume) }}
+  {% elif section == "skills" and include_sidebar_sections %}
+    {{ skill_block(resume, template) }}
+  {% elif section == "experience" %}
+    {{ experience_block(resume, template) }}
+  {% elif section == "projects" %}
+    {{ projects_block(resume, template) }}
+  {% elif section == "education" %}
+    {{ education_block(resume) }}
+  {% elif section == "certifications" and include_sidebar_sections %}
+    {{ certifications_block(resume) }}
+  {% endif %}
+{% endfor %}
+{%- endmacro %}
+
 {% macro sidebar_content(resume, template) -%}
 <aside class="resume-sidebar">
   {% if resume.personal.profile_image and template.photo_style != "none" and template.image_placement in ["sidebar-top", "identity-card", "watermark"] %}
@@ -148,10 +166,7 @@
     {{ sidebar_content(resume, template) }}
     {% endif %}
     <main class="resume-main">
-      {{ summary_block(resume) }}
-      {{ experience_block(resume, template) }}
-      {{ projects_block(resume, template) }}
-      {{ education_block(resume) }}
+      {{ ordered_sections(resume, template, False) }}
     </main>
     {% if template.layout == "sidebar-right" %}
     {{ sidebar_content(resume, template) }}
@@ -160,12 +175,7 @@
   {% else %}
   <div class="resume-body">
     <main class="resume-main">
-      {{ summary_block(resume) }}
-      {{ skill_block(resume, template) }}
-      {{ experience_block(resume, template) }}
-      {{ projects_block(resume, template) }}
-      {{ education_block(resume) }}
-      {{ certifications_block(resume) }}
+      {{ ordered_sections(resume, template, True) }}
     </main>
   </div>
   {% endif %}

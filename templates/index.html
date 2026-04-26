@@ -26,6 +26,24 @@
               {% endfor %}
             </select>
           </label>
+          <div class="grid two">
+            <label>
+              Search templates
+              <input id="templateSearch" type="search" placeholder="timeline, sidebar, portfolio">
+            </label>
+            <label>
+              Layout filter
+              <select id="layoutFilter">
+                <option value="">All layouts</option>
+                <option value="single">Single</option>
+                <option value="sidebar-left">Sidebar left</option>
+                <option value="sidebar-right">Sidebar right</option>
+                <option value="split">Split</option>
+                <option value="timeline">Timeline</option>
+                <option value="compact-grid">Compact grid</option>
+              </select>
+            </label>
+          </div>
           <label>
             Target role
             <input id="targetRole" type="text" placeholder="Frontend Engineer">
@@ -34,6 +52,18 @@
             Keywords
             <input id="keywords" type="text" placeholder="React, APIs, accessibility">
           </label>
+          <label>
+            Job description
+            <textarea id="jobDescription" rows="4" placeholder="Paste a job description for keyword gap analysis"></textarea>
+          </label>
+          <div class="action-row">
+            <button id="analyzeBtn" class="secondary-btn compact" type="button">Analyze</button>
+            <button id="exportBtn" class="secondary-btn compact" type="button">Export JSON</button>
+            <label class="secondary-btn compact import-btn">
+              Import JSON
+              <input id="importJson" type="file" accept="application/json">
+            </label>
+          </div>
         </section>
 
         <section class="template-gallery">
@@ -69,6 +99,21 @@
         </section>
 
         <form id="resumeForm" class="resume-form">
+          <section>
+            <div class="section-title-row">
+              <h2>Section order</h2>
+              <span id="saveStatus">Autosaved</span>
+            </div>
+            <div id="sectionOrder" class="section-order">
+              <button type="button" data-section="summary">Summary</button>
+              <button type="button" data-section="skills">Skills</button>
+              <button type="button" data-section="experience">Experience</button>
+              <button type="button" data-section="projects">Projects</button>
+              <button type="button" data-section="education">Education</button>
+              <button type="button" data-section="certifications">Certifications</button>
+            </div>
+          </section>
+
           <section>
             <h2>Personal</h2>
             <div class="grid two">
@@ -123,7 +168,12 @@
         <div class="score-strip">
           <strong id="atsScore">ATS 0</strong>
           <span id="atsHints">Complete the form to see optimization hints.</span>
+          <label class="zoom-control">
+            Zoom
+            <input id="previewZoom" type="range" min="70" max="120" value="100">
+          </label>
         </div>
+        <div id="keywordPanel" class="keyword-panel"></div>
         <div id="preview" class="preview-frame"></div>
       </section>
     </main>

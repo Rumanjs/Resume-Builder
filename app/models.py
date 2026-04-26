@@ -57,6 +57,10 @@ class ResumeData(BaseModel):
     certifications: List[CertificationItem] = Field(default_factory=list)
     target_role: Optional[str] = Field(default="", max_length=160)
     keywords: List[str] = Field(default_factory=list)
+    job_description: Optional[str] = Field(default="", max_length=6000)
+    section_order: List[str] = Field(
+        default_factory=lambda: ["summary", "skills", "experience", "projects", "education", "certifications"]
+    )
 
 
 class RenderRequest(BaseModel):
