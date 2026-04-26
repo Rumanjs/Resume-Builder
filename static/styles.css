@@ -1,0 +1,310 @@
+:root {
+  color-scheme: light;
+  font-family: Inter, Arial, Helvetica, sans-serif;
+  background: #eef2f6;
+  color: #18212f;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+.app-shell {
+  display: grid;
+  grid-template-columns: minmax(360px, 520px) 1fr;
+  min-height: 100vh;
+}
+
+.panel {
+  background: #ffffff;
+  border-right: 1px solid #d9e1ec;
+}
+
+.form-panel {
+  height: 100vh;
+  overflow: auto;
+  padding: 24px;
+}
+
+.brand-row,
+.entry-head,
+.score-strip {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.eyebrow {
+  margin: 0 0 4px;
+  color: #64748b;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+h1,
+h2,
+h3,
+p {
+  margin-top: 0;
+}
+
+.brand-row h1 {
+  margin-bottom: 0;
+  font-size: 28px;
+}
+
+.toolbar,
+.resume-form section,
+.item-card {
+  border-top: 1px solid #e4eaf2;
+  padding-top: 18px;
+  margin-top: 18px;
+}
+
+.toolbar {
+  display: grid;
+  gap: 12px;
+}
+
+label {
+  display: grid;
+  gap: 6px;
+  color: #475569;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+input,
+select,
+textarea {
+  width: 100%;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  padding: 10px 11px;
+  color: #111827;
+  background: #ffffff;
+}
+
+textarea {
+  resize: vertical;
+}
+
+.grid {
+  display: grid;
+  gap: 10px;
+}
+
+.grid.two {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.stack {
+  display: grid;
+  gap: 12px;
+}
+
+.item-card {
+  display: grid;
+  gap: 10px;
+  padding: 14px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  background: #fbfdff;
+}
+
+.primary-btn,
+.secondary-btn,
+.danger-btn {
+  border: 0;
+  border-radius: 6px;
+  padding: 10px 14px;
+  cursor: pointer;
+  font-weight: 800;
+}
+
+.primary-btn {
+  background: #0f766e;
+  color: #ffffff;
+}
+
+.secondary-btn {
+  margin-top: 12px;
+  background: #e8f0fb;
+  color: #1e3a8a;
+}
+
+.danger-btn {
+  justify-self: start;
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.preview-area {
+  height: 100vh;
+  overflow: auto;
+  padding: 24px;
+}
+
+.score-strip {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  margin: -24px -24px 24px;
+  padding: 14px 24px;
+  background: #15202f;
+  color: #ffffff;
+}
+
+.score-strip span {
+  color: #d8e2ef;
+  font-size: 14px;
+}
+
+.preview-frame {
+  width: min(100%, 900px);
+  margin: 0 auto;
+}
+
+.resume {
+  min-height: 1100px;
+  padding: 54px;
+  background: #ffffff;
+  box-shadow: 0 20px 70px rgba(15, 23, 42, 0.16);
+  color: #111827;
+  font-family: var(--resume-font);
+  line-height: 1.45;
+}
+
+.resume-header {
+  border-bottom: 3px solid var(--accent);
+  padding-bottom: 18px;
+  margin-bottom: 22px;
+}
+
+.resume h1 {
+  margin: 0;
+  color: var(--accent);
+  font-size: 34px;
+  letter-spacing: 0;
+}
+
+.resume-title {
+  margin: 5px 0;
+  font-size: 17px;
+  font-weight: 700;
+}
+
+.contact-line,
+.muted {
+  color: #4b5563;
+}
+
+.resume section {
+  margin-top: 20px;
+}
+
+.resume h2 {
+  margin-bottom: 9px;
+  color: var(--accent);
+  font-size: 15px;
+  text-transform: uppercase;
+  letter-spacing: 0;
+}
+
+.resume h3 {
+  margin-bottom: 2px;
+  font-size: 15px;
+}
+
+.resume ul {
+  margin: 7px 0 0 18px;
+  padding: 0;
+}
+
+.resume li {
+  margin-bottom: 5px;
+}
+
+.entry {
+  margin-bottom: 14px;
+}
+
+.entry-head span {
+  color: #4b5563;
+  white-space: nowrap;
+}
+
+.density-compact {
+  line-height: 1.32;
+  padding: 42px;
+}
+
+.density-roomy {
+  line-height: 1.58;
+}
+
+.section-boxed h2 {
+  background: color-mix(in srgb, var(--accent) 10%, #ffffff);
+  padding: 6px 8px;
+}
+
+.section-plain .resume-header {
+  border-bottom-width: 1px;
+}
+
+.section-caps h2 {
+  border-bottom: 1px solid var(--accent);
+  padding-bottom: 4px;
+}
+
+.modern .resume-header,
+.product .resume-header,
+.hybrid .resume-header {
+  border-bottom-style: double;
+}
+
+.technical h2,
+.compact h2 {
+  color: #111827;
+  border-left: 4px solid var(--accent);
+  padding-left: 8px;
+}
+
+@media (max-width: 980px) {
+  .app-shell {
+    grid-template-columns: 1fr;
+  }
+
+  .form-panel,
+  .preview-area {
+    height: auto;
+  }
+
+  .grid.two {
+    grid-template-columns: 1fr;
+  }
+
+  .resume {
+    padding: 28px;
+  }
+
+  .entry-head {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 2px;
+  }
+}
+

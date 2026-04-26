@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Resume Builder</title>
+    <link rel="stylesheet" href="/static/styles.css">
+  </head>
+  <body>
+    <main class="app-shell">
+      <aside class="panel form-panel">
+        <div class="brand-row">
+          <div>
+            <p class="eyebrow">ATS Resume Builder</p>
+            <h1>Build a resume</h1>
+          </div>
+          <button id="downloadBtn" class="primary-btn" type="button">PDF</button>
+        </div>
+
+        <section class="toolbar">
+          <label>
+            Template
+            <select id="templateSelect">
+              {% for template in templates %}
+              <option value="{{ template.id }}">{{ template.name }}</option>
+              {% endfor %}
+            </select>
+          </label>
+          <label>
+            Target role
+            <input id="targetRole" type="text" placeholder="Frontend Engineer">
+          </label>
+          <label>
+            Keywords
+            <input id="keywords" type="text" placeholder="React, APIs, accessibility">
+          </label>
+        </section>
+
+        <form id="resumeForm" class="resume-form">
+          <section>
+            <h2>Personal</h2>
+            <div class="grid two">
+              <input id="fullName" required placeholder="Full name" value="Alex Morgan">
+              <input id="title" placeholder="Professional title" value="Full Stack Developer">
+              <input id="email" type="email" required placeholder="Email" value="alex@example.com">
+              <input id="phone" required placeholder="Phone" value="+1 555 010 2288">
+              <input id="location" placeholder="Location" value="Austin, TX">
+              <input id="linkedin" placeholder="LinkedIn" value="linkedin.com/in/alexmorgan">
+            </div>
+            <textarea id="summary" rows="4" placeholder="Professional summary">Full stack developer with 5+ years of experience building reliable web applications, REST APIs, and accessible user interfaces for SaaS teams.</textarea>
+          </section>
+
+          <section>
+            <h2>Skills</h2>
+            <textarea id="skills" rows="3" placeholder="Comma-separated skills">Python, FastAPI, JavaScript, React, SQL, REST APIs, Docker, Accessibility, Testing</textarea>
+          </section>
+
+          <section>
+            <h2>Experience</h2>
+            <div id="experienceList" class="stack"></div>
+            <button class="secondary-btn" type="button" data-add="experience">Add experience</button>
+          </section>
+
+          <section>
+            <h2>Projects</h2>
+            <div id="projectList" class="stack"></div>
+            <button class="secondary-btn" type="button" data-add="project">Add project</button>
+          </section>
+
+          <section>
+            <h2>Education</h2>
+            <div id="educationList" class="stack"></div>
+            <button class="secondary-btn" type="button" data-add="education">Add education</button>
+          </section>
+
+          <section>
+            <h2>Certifications</h2>
+            <div id="certificationList" class="stack"></div>
+            <button class="secondary-btn" type="button" data-add="certification">Add certification</button>
+          </section>
+        </form>
+      </aside>
+
+      <section class="preview-area">
+        <div class="score-strip">
+          <strong id="atsScore">ATS 0</strong>
+          <span id="atsHints">Complete the form to see optimization hints.</span>
+        </div>
+        <div id="preview" class="preview-frame"></div>
+      </section>
+    </main>
+
+    <script src="/static/app.js"></script>
+  </body>
+</html>
+
