@@ -1,5 +1,6 @@
 const state = {
-  profileImage: "",
+  profileImage:
+    "data:image/svg+xml;utf8,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20120%20120'%3E%3Crect%20width='120'%20height='120'%20fill='%23e2e8f0'/%3E%3Ccircle%20cx='60'%20cy='45'%20r='24'%20fill='%2364758b'/%3E%3Cpath%20d='M22%20108c8-28%2028-42%2038-42s30%2014%2038%2042'%20fill='%23334155'/%3E%3C/svg%3E",
   experience: [
     {
       company: "Northstar Labs",
@@ -65,6 +66,14 @@ function splitComma(value) {
 
 function field(id) {
   return document.getElementById(id).value.trim();
+}
+
+function selectTemplate(templateId) {
+  $("#templateSelect").value = templateId;
+  document.querySelectorAll(".template-card").forEach((card) => {
+    card.classList.toggle("active", card.dataset.templateId === templateId);
+  });
+  schedulePreview();
 }
 
 function input(fieldName, placeholder, value = "") {
@@ -271,12 +280,15 @@ document.addEventListener("input", (event) => {
 
 document.addEventListener("click", (event) => {
   if (event.target.matches("[data-add]")) addItem(event.target.dataset.add);
+  const templateCard = event.target.closest(".template-card");
+  if (templateCard) selectTemplate(templateCard.dataset.templateId);
   if (event.target.closest(".item-card")) syncCard(event);
 });
 
-$("#templateSelect").addEventListener("change", schedulePreview);
+$("#templateSelect").addEventListener("change", (event) => selectTemplate(event.target.value));
 $("#downloadBtn").addEventListener("click", downloadPdf);
 $("#profileImage").addEventListener("change", handleImageUpload);
 
 renderCards();
+selectTemplate(field("templateSelect"));
 updatePreview();

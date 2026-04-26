@@ -117,7 +117,7 @@
 
 {% macro sidebar_content(resume, template) -%}
 <aside class="resume-sidebar">
-  {% if resume.personal.profile_image and template.photo_style != "none" %}
+  {% if resume.personal.profile_image and template.photo_style != "none" and template.image_placement in ["sidebar-top", "identity-card", "watermark"] %}
   <img class="profile-photo photo-{{ template.photo_style }}" src="{{ resume.personal.profile_image }}" alt="">
   {% endif %}
   {{ contact_list(resume) }}
@@ -127,11 +127,11 @@
 {%- endmacro %}
 
 <article
-  class="resume resume-layout-{{ template.layout }} family-{{ template.family }} density-{{ template.density }} section-{{ template.section_style }} header-{{ template.header_style }}"
+  class="resume resume-layout-{{ template.layout }} family-{{ template.family }} density-{{ template.density }} section-{{ template.section_style }} header-{{ template.header_style }} ornament-{{ template.ornament }} scale-{{ template.scale }} image-{{ template.image_placement }}"
   style="--accent: {{ template.accent }}; --muted-bg: {{ template.muted }}; --resume-font: {{ template.font }};"
 >
   <header class="resume-header">
-    {% if resume.personal.profile_image and template.photo_style != "none" and template.layout == "single" %}
+    {% if resume.personal.profile_image and template.photo_style != "none" and template.image_placement in ["header-left", "header-right", "identity-card"] %}
     <img class="profile-photo photo-{{ template.photo_style }}" src="{{ resume.personal.profile_image }}" alt="">
     {% endif %}
     <div class="identity">

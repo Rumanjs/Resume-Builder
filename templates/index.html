@@ -36,6 +36,38 @@
           </label>
         </section>
 
+        <section class="template-gallery">
+          <div class="section-title-row">
+            <h2>Template styles</h2>
+            <span>120 layouts</span>
+          </div>
+          <div id="templateGallery" class="template-grid" aria-label="Resume template gallery">
+            {% for template in templates %}
+            <button
+              class="template-card"
+              type="button"
+              data-template-id="{{ template.id }}"
+              data-layout="{{ template.layout }}"
+              style="--accent: {{ template.accent }}; --muted-bg: {{ template.muted }};"
+            >
+              <span class="mini-resume mini-{{ template.layout }} mini-{{ template.header_style }} mini-{{ template.ornament }}">
+                {% if template.image_placement != "none" and template.photo_style != "none" %}
+                <i class="mini-photo"></i>
+                {% endif %}
+                <i class="mini-head"></i>
+                <i class="mini-side"></i>
+                <i class="mini-line a"></i>
+                <i class="mini-line b"></i>
+                <i class="mini-line c"></i>
+                <i class="mini-line d"></i>
+              </span>
+              <strong>{{ template.name }}</strong>
+              <small>{{ template.layout }} · {{ template.skill_style }}</small>
+            </button>
+            {% endfor %}
+          </div>
+        </section>
+
         <form id="resumeForm" class="resume-form">
           <section>
             <h2>Personal</h2>
@@ -51,7 +83,7 @@
             <label class="upload-box">
               Profile image
               <input id="profileImage" type="file" accept="image/*">
-              <span id="profileImageName">Optional for creative templates</span>
+              <span id="profileImageName">Used by image-ready templates</span>
             </label>
             <textarea id="summary" rows="4" placeholder="Professional summary">Full stack developer with 5+ years of experience building reliable web applications, REST APIs, and accessible user interfaces for SaaS teams.</textarea>
           </section>
