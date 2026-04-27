@@ -8,6 +8,7 @@ from starlette.requests import Request
 
 from app.ats import ats_report
 from app.models import RenderRequest
+from app.optimizer import optimize_resume
 from app.pdf import generate_pdf
 from app.template_catalog import TEMPLATES, get_template
 
@@ -51,6 +52,11 @@ def score_resume(payload: RenderRequest) -> dict:
 @app.post("/api/keywords")
 def extract_resume_keywords(payload: RenderRequest) -> dict:
     return {"keywords": ats_report(payload.resume)["extracted_keywords"]}
+
+
+@app.post("/api/optimize")
+def optimize_resume_content(payload: RenderRequest) -> dict:
+    return optimize_resume(payload.resume)
 
 
 @app.post("/api/pdf")

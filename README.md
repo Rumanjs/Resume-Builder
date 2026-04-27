@@ -22,6 +22,7 @@ http://127.0.0.1:8000
 - Renders a real-time browser preview.
 - Includes template search/filtering, preview zoom, section ordering, autosave, and JSON import/export.
 - Extracts keywords from pasted job descriptions and highlights ATS keyword gaps.
+- Provides AI-style resume optimization with weak bullet detection, impact-focused rewrites, role-based skill recommendations, project improvements, and score breakdowns.
 - Supports profile image uploads for image-ready templates.
 - Generates a downloadable PDF using clean, parser-friendly text layout.
 - Keeps templates data-driven so more styles or AI suggestions can be added later.

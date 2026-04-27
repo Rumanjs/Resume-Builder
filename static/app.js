@@ -361,6 +361,87 @@ async function analyzeKeywords() {
   }
 }
 
+async function optimizeResume() {
+  $("#optimizerPanel").innerHTML = `<div class="optimizer-card"><strong>Optimizing...</strong><p>Reviewing bullets, keywords, role fit, and ATS impact.</p></div>`;
+  const response = await fetch("/api/optimize", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload())
+  });
+  if (!response.ok) {
+    $("#optimizerPanel").innerHTML = `<div class="optimizer-card"><strong>Optimization failed</strong><p>Complete the required resume fields and try again.</p></div>`;
+    return;
+  }
+  renderOptimizer(await response.json());
+}
+
+function copyText(value) {
+  navigator.clipboard?.writeText(value);
+}
+
+function renderOptimizer(report) {
+  const scoreItems = Object.entries(report.breakdown || {})
+    .map(([label, value]) => `<span><b>${label.replace("_", " ")}</b>${value}</span>`)
+    .join("");
+  const rewrites = (report.rewrites || [])
+    .slice(0, 5)
+    .map(
+      (item) => `
+        <li>
+          <small>${escapeHtml(item.item)}</small>
+          <p>${escapeHtml(item.improved)}</p>
+          <button type="button" data-copy="${escapeHtml(item.improved)}">Copy</button>
+        </li>`
+    )
+    .join("");
+  const weak = (report.weak_bullets || [])
+    .slice(0, 5)
+    .map((item) => `<li><b>${escapeHtml(item.reason)}</b><span>${escapeHtml(item.original)}</span></li>`)
+    .join("");
+  const keywords = (report.keyword_suggestions || [])
+    .map((item) => `<li><b>${escapeHtml(item.keyword)}</b><span>${escapeHtml(item.where)} - ${escapeHtml(item.how)}</span></li>`)
+    .join("");
+  const projects = (report.project_improvements || [])
+    .map((item) => `<li><b>${escapeHtml(item.project)}</b><span>${escapeHtml(item.improved_description)}</span></li>`)
+    .join("");
+
+  $("#optimizerPanel").innerHTML = `
+    <div class="optimizer-card">
+      <div class="optimizer-head">
+        <div>
+          <strong>AI Resume Optimizer</strong>
+          <p>Overall score: ${report.score}/100</p>
+        </div>
+        <button type="button" data-copy="${escapeHtml(report.summary || "")}">Copy summary</button>
+      </div>
+      <div class="score-grid">${scoreItems}</div>
+      <section>
+        <h3>Professional Summary</h3>
+        <p>${escapeHtml(report.summary || "")}</p>
+      </section>
+      <section>
+        <h3>Bullet Rewrites</h3>
+        <ul class="optimizer-list">${rewrites || "<li>No rewrites needed.</li>"}</ul>
+      </section>
+      <section>
+        <h3>Weak Bullets</h3>
+        <ul class="optimizer-list">${weak || "<li>Bullets look strong. Keep measurable impact visible.</li>"}</ul>
+      </section>
+      <section>
+        <h3>Keyword Placement</h3>
+        <ul class="optimizer-list">${keywords || "<li>Keyword coverage is healthy.</li>"}</ul>
+      </section>
+      <section>
+        <h3>Recommended Skills</h3>
+        <div class="keyword-chips">${(report.recommended_skills || []).map((skill) => `<button type="button" data-keyword="${escapeHtml(skill)}">${escapeHtml(skill)}</button>`).join("")}</div>
+      </section>
+      <section>
+        <h3>Project Improvements</h3>
+        <ul class="optimizer-list">${projects || "<li>Add project outcomes with tools, scope, and measurable results.</li>"}</ul>
+      </section>
+    </div>`;
+}
+
 function draftData() {
   return {
     fields: {
@@ -444,6 +525,8 @@ document.addEventListener("click", (event) => {
   if (orderButton) moveSection(orderButton.dataset.section, event);
   const keywordButton = event.target.closest("[data-keyword]");
   if (keywordButton) addKeyword(keywordButton.dataset.keyword);
+  const copyButton = event.target.closest("[data-copy]");
+  if (copyButton) copyText(copyButton.dataset.copy);
   if (event.target.closest(".item-card")) syncCard(event);
 });
 
@@ -453,6 +536,7 @@ $("#layoutFilter").addEventListener("change", filterTemplates);
 $("#downloadBtn").addEventListener("click", downloadPdf);
 $("#profileImage").addEventListener("change", handleImageUpload);
 $("#analyzeBtn").addEventListener("click", analyzeKeywords);
+$("#optimizeBtn").addEventListener("click", optimizeResume);
 $("#exportBtn").addEventListener("click", exportJson);
 $("#importJson").addEventListener("change", importJson);
 $("#previewZoom").addEventListener("input", (event) => {
