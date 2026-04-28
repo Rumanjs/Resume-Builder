@@ -4,6 +4,6 @@ __pycache__/
 venv/
 env/
 .env
+.idea/
 *.log
 .DS_Store
-

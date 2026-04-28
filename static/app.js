@@ -166,12 +166,18 @@ function renderSectionOrder() {
     education: "Education",
     certifications: "Certifications"
   };
-  $("#sectionOrder").innerHTML = state.sectionOrder
+  const sectionOrderEl = $("#sectionOrder");
+  if (!sectionOrderEl) return;
+  
+  sectionOrderEl.innerHTML = state.sectionOrder
     .map(
       (section, index) => `
-        <button type="button" data-section="${section}">
-          <span>${index + 1}</span>${labels[section]}
-        </button>`
+        <div class="section-order-item" data-section="${section}">
+          <input type="number" class="section-position" min="1" max="${state.sectionOrder.length}" value="${index + 1}" data-section="${section}">
+          <span class="section-label">${labels[section]}</span>
+          <button type="button" class="section-move-up" data-section="${section}" title="Move up" aria-label="Move ${labels[section]} up">↑</button>
+          <button type="button" class="section-move-down" data-section="${section}" title="Move down" aria-label="Move ${labels[section]} down">↓</button>
+        </div>`
     )
     .join("");
 }
@@ -226,8 +232,8 @@ function payload() {
         profile_image: state.profileImage,
         summary: field("summary")
       },
-      target_role: field("targetRole"),
-      keywords: splitComma(field("keywords")),
+      target_role: "",
+      keywords: [],
       job_description: field("jobDescription"),
       section_order: state.sectionOrder,
       skills: splitComma(field("skills")),
@@ -317,47 +323,73 @@ function handleImageUpload(event) {
   reader.readAsDataURL(file);
 }
 
-function moveSection(section, event) {
+function moveSectionUp(event) {
+  const button = event.target.closest(".section-move-up");
+  if (!button) return;
+  const section = button.dataset.section;
   const index = state.sectionOrder.indexOf(section);
-  if (index < 0) return;
-  const nextIndex = event.shiftKey ? Math.max(0, index - 1) : Math.min(state.sectionOrder.length - 1, index + 1);
-  state.sectionOrder.splice(index, 1);
-  state.sectionOrder.splice(nextIndex, 0, section);
-  renderSectionOrder();
-  schedulePreview();
+  if (index > 0) {
+    state.sectionOrder.splice(index, 1);
+    state.sectionOrder.splice(index - 1, 0, section);
+    renderSectionOrder();
+    schedulePreview();
+  }
+}
+
+function moveSectionDown(event) {
+  const button = event.target.closest(".section-move-down");
+  if (!button) return;
+  const section = button.dataset.section;
+  const index = state.sectionOrder.indexOf(section);
+  if (index < state.sectionOrder.length - 1) {
+    state.sectionOrder.splice(index, 1);
+    state.sectionOrder.splice(index + 1, 0, section);
+    renderSectionOrder();
+    schedulePreview();
+  }
+}
+
+function handleSectionPositionChange(event) {
+  const newPosition = parseInt(event.target.value, 10) - 1;
+  const section = event.target.dataset.section;
+  const currentIndex = state.sectionOrder.indexOf(section);
+  
+  if (newPosition >= 0 && newPosition < state.sectionOrder.length && newPosition !== currentIndex) {
+    state.sectionOrder.splice(currentIndex, 1);
+    state.sectionOrder.splice(newPosition, 0, section);
+    renderSectionOrder();
+    schedulePreview();
+  }
 }
 
 function filterTemplates() {
-  const query = field("templateSearch").toLowerCase();
   const layout = field("layoutFilter");
   document.querySelectorAll(".template-card").forEach((card) => {
-    const text = card.textContent.toLowerCase();
-    const matchesQuery = !query || text.includes(query) || card.dataset.layout.includes(query);
     const matchesLayout = !layout || card.dataset.layout === layout;
-    card.hidden = !(matchesQuery && matchesLayout);
+    card.hidden = !matchesLayout;
   });
 }
 
 function addKeyword(keyword) {
-  const current = splitComma(field("keywords"));
-  if (!current.map((item) => item.toLowerCase()).includes(keyword.toLowerCase())) {
-    current.push(keyword);
-    setValue("keywords", current.join(", "));
+  const current = field("skills");
+  const list = splitComma(current);
+  if (!list.map(s => s.toLowerCase()).includes(keyword.toLowerCase())) {
+    list.push(keyword);
+    setValue("skills", list.join(", "));
     schedulePreview();
   }
 }
 
 async function analyzeKeywords() {
-  const response = await fetch("/api/keywords", {
+  const body = JSON.stringify(payload());
+  const response = await fetch("/api/ats", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload())
+    body
   });
-  if (!response.ok) return;
-  const data = await response.json();
-  if (data.keywords?.length) {
-    setValue("keywords", data.keywords.slice(0, 12).join(", "));
-    schedulePreview();
+  if (response.ok) {
+    const report = await response.json();
+    renderKeywordPanel(report);
   }
 }
 
@@ -446,8 +478,6 @@ function draftData() {
   return {
     fields: {
       templateSelect: field("templateSelect"),
-      targetRole: field("targetRole"),
-      keywords: field("keywords"),
       jobDescription: field("jobDescription"),
       fullName: field("fullName"),
       title: field("title"),
@@ -514,6 +544,10 @@ document.addEventListener("input", (event) => {
     syncCard(event);
     return;
   }
+  if (event.target.matches(".section-position")) {
+    handleSectionPositionChange(event);
+    return;
+  }
   schedulePreview();
 });
 
@@ -521,8 +555,8 @@ document.addEventListener("click", (event) => {
   if (event.target.matches("[data-add]")) addItem(event.target.dataset.add);
   const templateCard = event.target.closest(".template-card");
   if (templateCard) selectTemplate(templateCard.dataset.templateId);
-  const orderButton = event.target.closest("#sectionOrder [data-section]");
-  if (orderButton) moveSection(orderButton.dataset.section, event);
+  if (event.target.matches(".section-move-up")) moveSectionUp(event);
+  if (event.target.matches(".section-move-down")) moveSectionDown(event);
   const keywordButton = event.target.closest("[data-keyword]");
   if (keywordButton) addKeyword(keywordButton.dataset.keyword);
   const copyButton = event.target.closest("[data-copy]");
@@ -531,11 +565,13 @@ document.addEventListener("click", (event) => {
 });
 
 $("#templateSelect").addEventListener("change", (event) => selectTemplate(event.target.value));
-$("#templateSearch").addEventListener("input", filterTemplates);
-$("#layoutFilter").addEventListener("change", filterTemplates);
+const layoutFilter = $("#layoutFilter");
+if (layoutFilter) {
+  layoutFilter.addEventListener("change", filterTemplates);
+}
+$("#analyzeBtn").addEventListener("click", analyzeKeywords);
 $("#downloadBtn").addEventListener("click", downloadPdf);
 $("#profileImage").addEventListener("change", handleImageUpload);
-$("#analyzeBtn").addEventListener("click", analyzeKeywords);
 $("#optimizeBtn").addEventListener("click", optimizeResume);
 $("#exportBtn").addEventListener("click", exportJson);
 $("#importJson").addEventListener("change", importJson);

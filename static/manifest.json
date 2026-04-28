@@ -1,0 +1,17 @@
+{
+  "name": "AI Resume Builder",
+  "short_name": "Resume AI",
+  "description": "Professional ATS-friendly resume builder with AI optimization.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#2563eb",
+  "icons": [
+    {
+      "src": "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' rx='100' fill='%232563eb'/><path d='M160 128h192v256H160z' fill='white'/><path d='M200 180h112v20H200zm0 40h112v20H200zm0 40h112v20H200z' fill='%232563eb'/></svg>",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

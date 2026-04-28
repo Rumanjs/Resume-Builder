@@ -114,33 +114,70 @@ p {
 }
 
 .section-order {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  display: flex;
+  flex-direction: column;
   gap: 8px;
 }
 
-.section-order button {
-  display: flex;
+.section-order-item {
+  display: grid;
+  grid-template-columns: 50px 1fr 32px 32px;
   align-items: center;
   gap: 8px;
   border: 1px solid #d7e0ec;
   border-radius: 6px;
-  padding: 9px;
-  color: #1f2937;
+  padding: 10px;
   background: #ffffff;
-  cursor: pointer;
-  font-weight: 800;
 }
 
-.section-order span {
-  display: inline-grid;
-  place-items: center;
-  width: 22px;
-  height: 22px;
-  border-radius: 999px;
-  color: #ffffff;
-  background: #334155;
-  font-size: 11px;
+.section-order-item .section-position {
+  width: 100%;
+  border: 1px solid #d0d9ec;
+  border-radius: 4px;
+  padding: 6px;
+  font-size: 13px;
+  text-align: center;
+  font-weight: 600;
+}
+
+.section-order-item .section-position:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.section-order-item .section-label {
+  font-weight: 600;
+  color: #1f2937;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.section-order-item .section-move-up,
+.section-order-item .section-move-down {
+  width: 32px;
+  height: 32px;
+  border: 1px solid #d0d9ec;
+  border-radius: 4px;
+  padding: 0;
+  background: #ffffff;
+  color: #334155;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 14px;
+  transition: all 0.15s;
+}
+
+.section-order-item .section-move-up:hover,
+.section-order-item .section-move-down:hover {
+  background: #f0f4f8;
+  border-color: #a8b4c6;
+}
+
+.section-order-item .section-move-up:active,
+.section-order-item .section-move-down:active {
+  background: #e4ebf5;
 }
 
 .template-card {

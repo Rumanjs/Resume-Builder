@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from fastapi import FastAPI, HTTPException
-from fastapi.responses import HTMLResponse, Response
+from fastapi.responses import HTMLResponse, Response, FileResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from starlette.requests import Request
@@ -14,15 +14,24 @@ from app.template_catalog import TEMPLATES, get_template
 
 app = FastAPI(title="AI Resume Builder", version="1.0.0")
 app.mount("/static", StaticFiles(directory="static"), name="static")
+
+@app.get("/manifest.json")
+def get_manifest():
+    return FileResponse("static/manifest.json")
+
+@app.get("/sw.js")
+def get_sw():
+    return FileResponse("static/sw.js", media_type="application/javascript")
+
 templates = Jinja2Templates(directory="templates")
 
 
 @app.get("/", response_class=HTMLResponse)
 def home(request: Request) -> HTMLResponse:
     return templates.TemplateResponse(
+        request,
         "index.html",
         {
-            "request": request,
             "templates": TEMPLATES,
         },
     )

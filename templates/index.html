@@ -4,7 +4,16 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Resume Builder</title>
+    <meta name="theme-color" content="#2563eb">
+    <link rel="manifest" href="/manifest.json">
     <link rel="stylesheet" href="/static/styles.css">
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js');
+        });
+      }
+    </script>
   </head>
   <body>
     <main class="app-shell">
@@ -26,31 +35,17 @@
               {% endfor %}
             </select>
           </label>
-          <div class="grid two">
-            <label>
-              Search templates
-              <input id="templateSearch" type="search" placeholder="timeline, sidebar, portfolio">
-            </label>
-            <label>
-              Layout filter
-              <select id="layoutFilter">
-                <option value="">All layouts</option>
-                <option value="single">Single</option>
-                <option value="sidebar-left">Sidebar left</option>
-                <option value="sidebar-right">Sidebar right</option>
-                <option value="split">Split</option>
-                <option value="timeline">Timeline</option>
-                <option value="compact-grid">Compact grid</option>
-              </select>
-            </label>
-          </div>
           <label>
-            Target role
-            <input id="targetRole" type="text" placeholder="Frontend Engineer">
-          </label>
-          <label>
-            Keywords
-            <input id="keywords" type="text" placeholder="React, APIs, accessibility">
+            Layout filter
+            <select id="layoutFilter">
+              <option value="">All layouts</option>
+              <option value="single">Single</option>
+              <option value="sidebar-left">Sidebar left</option>
+              <option value="sidebar-right">Sidebar right</option>
+              <option value="split">Split</option>
+              <option value="timeline">Timeline</option>
+              <option value="compact-grid">Compact grid</option>
+            </select>
           </label>
           <label>
             Job description
@@ -106,12 +101,7 @@
               <span id="saveStatus">Autosaved</span>
             </div>
             <div id="sectionOrder" class="section-order">
-              <button type="button" data-section="summary">Summary</button>
-              <button type="button" data-section="skills">Skills</button>
-              <button type="button" data-section="experience">Experience</button>
-              <button type="button" data-section="projects">Projects</button>
-              <button type="button" data-section="education">Education</button>
-              <button type="button" data-section="certifications">Certifications</button>
+              <!-- Rendered dynamically by JavaScript -->
             </div>
           </section>
 
